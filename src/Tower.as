@@ -13,10 +13,6 @@ package  {
 		public static const SHOOT : String = "Shoot";
 		
 		private var _towerArt : TowerCannon = new TowerCannon;
-		private var p : Point;
-		private var _diffX : Number;
-		private var _diffY : Number;
-		private var _rotationInRadians : Number;
 		
 		public function Tower() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -35,6 +31,11 @@ package  {
 		}
 		
 		private function pointAtMouse():void {
+			var p : Point;
+			var _diffX : Number;
+			var _diffY : Number;
+			var _rotationInRadians : Number;
+			
 			// Calc diff between player and mouse
 			p = new Point(mouseX, mouseY);
 			p = localToGlobal(p);
@@ -48,18 +49,23 @@ package  {
 		
 		public function shoot():void {
 			trace("Shooting a rocket");
-			var newRocket : Rocket = new Rocket();
+			
+			var newRocket : Rocket;
+			var _radians : Number;
+			var _speedX : Number;
+			var _speedY : Number;
+			
+			newRocket = new Rocket();
 			newRocket.setDirection(rotation);
 			newRocket.x = this.x;
 			newRocket.y = this.y;
 			
-			var _radians : Number = rotation * Math.PI / 180;
-			var _speedX : Number = 1;
-			var _speedY : Number = 1;
+			_radians = rotation * Math.PI / 180;
+			_speedX = 1;
+			_speedY = 1;
 			addChild(newRocket);
 			
-			// Todo: Push the newRocket into the rockets array
-			// rockets.push(newRocket);
+			// Tell the game that we just shot a rocket
 			dispatchEvent(new ShootEvent(SHOOT, newRocket));
 		}
 		

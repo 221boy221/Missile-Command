@@ -11,8 +11,9 @@ package  {
 	public class Game extends Sprite {
 		
 		private var _towers : Array = [];
-		private var _tower : Tower = new Tower;
 		private var _rockets : Array = [];
+		private var _tower : Tower = new Tower;
+		
 		
 		public function Game() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -49,7 +50,9 @@ package  {
 		
 		private function update(e:Event):void {
 			// Update Rockets
-			
+			//for (var i : int = _rockets.length - 1; i >= 0; i--) {
+			//	
+			//}
 			
 			// check if bullet goes out of bounds?
 		}
