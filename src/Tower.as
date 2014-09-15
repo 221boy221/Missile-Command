@@ -11,7 +11,6 @@ package  {
 	public class Tower extends Sprite {
 		
 		public static const SHOOT : String = "Shoot";
-		
 		private var _towerArt : TowerCannon = new TowerCannon;
 		
 		public function Tower() {
@@ -31,16 +30,16 @@ package  {
 		}
 		
 		private function pointAtMouse():void {
-			var p : Point;
-			var _diffX : Number;
-			var _diffY : Number;
-			var _rotationInRadians : Number;
+			var _p : Point,
+				_diffX : Number,
+				_diffY : Number,
+				_rotationInRadians : Number;
 			
 			// Calc diff between player and mouse
-			p = new Point(mouseX, mouseY);
-			p = localToGlobal(p);
-			_diffX = p.x - this.x;
-			_diffY = p.y - this.y;
+			_p = new Point(mouseX, mouseY);
+			_p = localToGlobal(_p);
+			_diffX = _p.x - this.x;
+			_diffY = _p.y - this.y;
 			
 			// Change the values to radians and rotate the tower
 			_rotationInRadians = Math.atan2(_diffY, _diffX);
@@ -50,20 +49,21 @@ package  {
 		public function shoot():void {
 			trace("Shooting a rocket");
 			
-			var newRocket : Rocket;
-			var _radians : Number;
-			var _speedX : Number;
-			var _speedY : Number;
+			var newRocket : Rocket,
+				_radians : Number,
+				_speedX : Number,
+				_speedY : Number;
 			
-			newRocket = new Rocket();
-			newRocket.setDirection(rotation);
+			newRocket = new Rocket;
+			newRocket.setDirection(_towerArt.rotation);
 			newRocket.x = this.x;
 			newRocket.y = this.y;
 			
-			_radians = rotation * Math.PI / 180;
+			_radians = _towerArt.rotation * Math.PI / 180;
 			_speedX = 1;
 			_speedY = 1;
-			addChild(newRocket);
+			newRocket.x = this.x + 10 * Math.cos(_radians);
+			newRocket.y = this.y + 10 * Math.sin(_radians);
 			
 			// Tell the game that we just shot a rocket
 			dispatchEvent(new ShootEvent(SHOOT, newRocket));

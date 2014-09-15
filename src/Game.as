@@ -34,6 +34,7 @@ package  {
 		private function fire(e:ShootEvent):void {
 			var _newRocket : Rocket = e.rocket;
 			_rockets.push(_newRocket);
+			addChild(_newRocket);
 			trace(_rockets);
 		}
 		
@@ -50,9 +51,13 @@ package  {
 		
 		private function update(e:Event):void {
 			// Update Rockets
-			//for (var i : int = _rockets.length - 1; i >= 0; i--) {
-			//	
-			//}
+			var _rocketsLength : int = _rockets.length;
+			for (var i : int = _rocketsLength - 1; i >= 0; i--) {
+				_rockets[i].update();
+				
+				
+				
+			}
 			
 			// check if bullet goes out of bounds?
 		}
