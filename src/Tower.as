@@ -47,23 +47,27 @@ package  {
 		}
 		
 		public function shoot():void {
-			trace("Shooting a rocket");
+			//trace("Shooting a rocket");
 			
 			var newRocket : Rocket,
 				_radians : Number,
 				_speedX : Number,
 				_speedY : Number;
 			
-			newRocket = new Rocket;
-			newRocket.setDirection(_towerArt.rotation);
-			newRocket.x = this.x;
-			newRocket.y = this.y;
+				//trace("Tower rot: " + _towerArt.rotation);
 			
+			newRocket = new Rocket;
+
 			_radians = _towerArt.rotation * Math.PI / 180;
 			_speedX = 1;
 			_speedY = 1;
 			newRocket.x = this.x + 10 * Math.cos(_radians);
 			newRocket.y = this.y + 10 * Math.sin(_radians);
+			
+			
+			newRocket.setDirection(_towerArt.rotation);
+			newRocket.x = this.x;
+			newRocket.y = this.y;
 			
 			// Tell the game that we just shot a rocket
 			dispatchEvent(new ShootEvent(SHOOT, newRocket));

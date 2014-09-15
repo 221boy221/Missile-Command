@@ -46,7 +46,7 @@ package  {
 			var shooter : int;
 			shooter = Math.random() * _towers.length;
 			_towers[shooter].shoot();
-			trace("Tower: " + shooter);
+			//trace("Tower: " + shooter);
 		}
 		
 		private function update(e:Event):void {
@@ -54,9 +54,6 @@ package  {
 			var _rocketsLength : int = _rockets.length;
 			for (var i : int = _rocketsLength - 1; i >= 0; i--) {
 				_rockets[i].update();
-				
-				
-				
 			}
 			
 			// check if bullet goes out of bounds?
