@@ -8,7 +8,7 @@ package {
 	 */
 	public class Main extends Sprite {
 		
-		private var _game:Game;
+		private var _game : Game;
 		
 		public function Main():void {
 			if (stage) init();
