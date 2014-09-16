@@ -7,20 +7,20 @@ package  {
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class Rocket extends Sprite {
+	public class Rocket extends Projectile {
 		
-		private var _rocketArt : rocketArt;
-		private var _speed : Number = 10;
+		public static var ARRIVED : Boolean;
 		private var _stepX : Number;
 		private var _stepY : Number;
-		// Check
-		private var isOutOfBounds : Boolean = false;
-		private var _target : Point;
-		
+		private var _mouseP : Point;
 		
 		public function Rocket() {
-			_rocketArt = new rocketArt;
-			addChild(_rocketArt);
+			
+			projectileName = "Rocket";
+			projectileArt = new rocketArt;
+			speed = 10;
+			
+			addChild(projectileArt);
 		}
 		
 		public function setDirection(angle:Number):void {
@@ -34,17 +34,17 @@ package  {
 			_radian = angle / (180 / Math.PI);
 			
 			// Get coördinates to fly to
-			_stepX = Math.cos(_radian) * _speed;
-			_stepY = Math.sin(_radian) * _speed;
+			_stepX = Math.cos(_radian) * speed;
+			_stepY = Math.sin(_radian) * speed;
 			
 			// Get click position
-			_target = new Point(mouseX, mouseY);
-			_target = localToGlobal(_target);
+			_mouseP = new Point(mouseX, mouseY);
+			_mouseP = localToGlobal(_mouseP);
 		}
 		
-		public function update():void {
-			var a2 : Number = (_target.x - this.x) * (_target.x - this.x),
-				b2 : Number = (_target.y - this.y) * (_target.y - this.y);
+		override public function update():void {
+			var a2 : Number = (_mouseP.x - this.x) * (_mouseP.x - this.x),
+				b2 : Number = (_mouseP.y - this.y) * (_mouseP.y - this.y);
 				
 			// Fly to the coördinates
 			this.x += _stepX;
@@ -54,17 +54,11 @@ package  {
 			if (Math.sqrt(a2 + b2) < 5) {
 				trace("remove / explode");
 				// Strange delay
-			}
-			
-			// Check if rocket is out of bounds
-			if (this.x > stage.stageWidth +10 || this.x < -10 || this.y > stage.stageHeight +10 || this.y < -10) {
-				isOutOfBounds = true;
+				ARRIVED = true;
+				
 			}
 		}
 		
-		private function get outOfBounds():Boolean {
-			return isOutOfBounds;
-		}
 	}
 
 }
