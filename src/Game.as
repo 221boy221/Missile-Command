@@ -3,6 +3,11 @@ package  {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import towers.Tower;
+	import towers.TowerFactory;
+	import weapons.Projectile;
+	import towers.Tower_01;
+	import weapons.Rocket;
 	
 	/**
 	 * ...
@@ -10,9 +15,37 @@ package  {
 	 */
 	public class Game extends Sprite {
 		
+		private var _towers : Array = [];
+		
+		public function Game() {
+			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		private function init(e:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+			// Entry
+			
+			//addEventListener(Event.ENTER_FRAME, update);
+			
+			createTower();
+		}
+		
+		private function createTower():void {
+			var towerFactory:TowerFactory = new TowerFactory(),
+				tower : Tower;
+			
+			for (var i:Number = 0; i < 3; i++) {
+				tower = towerFactory.addTower(TowerFactory.TOWER, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+				_towers.push(tower);
+			}
+		}
+		
+		
+		
+		/*
 		private var _towers		:	Array = [];
 		private var _rockets	:	Array = [];
-		private var _tower		:	Tower = new Tower;
+		private var _tower		:	Tower_01 = new Tower_01;
 		private var _isOutOfBounds	:	Boolean = false;
 		
 		public function Game() {
@@ -69,14 +102,14 @@ package  {
 		}
 		
 		private function getNewTower():void {
-			var _tower : Tower = new Tower;
+			var _tower : Tower_01 = new Tower_01;
 			addChild(_tower);
 			_tower.x = Math.random() * stage.stageWidth;
 			_tower.y = stage.stageHeight - 100;
 			_towers.push(_tower);
-			_tower.addEventListener(Tower.SHOOT, fire);
+			_tower.addEventListener(Tower_01.SHOOT, fire);
 		}
-		
+		*/
 		
 	}
 

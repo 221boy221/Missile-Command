@@ -1,19 +1,24 @@
-package  {
+package archive {
 	import events.ShootEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import weapons.Rocket;
+	import towers.Tower_01;
+	import weapons.TowerWeapon;
+	import weapons.Weapon;
 	
 	/**
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class Tower extends Sprite {
+	internal class Tower_01 extends Tower {
 		
 		public static const SHOOT	:	String		= "Shoot";
 		private var _towerArt		:	TowerCannon	= new TowerCannon;
 		
-		public function Tower() {
+		public function Tower_01() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
@@ -25,7 +30,7 @@ package  {
 			addChild(_towerArt);
 		}
 		
-		private function update(e:Event):void {
+		public function update(e:Event):void {
 			pointAtMouse();
 		}
 		
@@ -43,7 +48,7 @@ package  {
 			
 			// Change the values to radians and rotate the tower
 			_rotationInRadians = Math.atan2(_diffY, _diffX);
-			_towerArt.rotation = _rotationInRadians * (180 / Math.PI);
+			rotation = _rotationInRadians * (180 / Math.PI);
 		}
 		
 		public function shoot():void {

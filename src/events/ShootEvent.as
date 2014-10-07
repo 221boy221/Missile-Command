@@ -1,5 +1,7 @@
 package events {
 	import flash.events.Event;
+	import weapons.Projectile;
+	import weapons.Rocket;
 	
 	/**
 	 * ...

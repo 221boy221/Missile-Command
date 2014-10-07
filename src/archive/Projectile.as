@@ -1,5 +1,7 @@
-package  {
+package archive {
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import weapons.Projectile;
 	
 	/**
 	 * ...
