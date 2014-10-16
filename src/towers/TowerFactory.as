@@ -6,11 +6,11 @@ package towers {
 	 */
 	public class TowerFactory {
 		
-		public static const TOWER:uint = 0;
+		public static const TOWER_01:uint = 0;
 		public static const TOWER_02:uint = 1;
 		
-		public function addTower(towerType:uint, target:Stage, xLoc:int, yLoc:int):Tower {
-			var tower:Tower = this.createTower(towerType);
+		public function addTower(towerType:uint, target:Stage, xLoc:int, yLoc:int):TowerBase {
+			var tower:TowerBase = this.createTower(towerType);
 			
 			tower.drawTower();
 			tower.setLoc(xLoc, yLoc);
@@ -20,13 +20,13 @@ package towers {
 			return tower;
 		}
 		
-		private function createTower(towerType:uint):Tower {
+		private function createTower(towerType:uint):TowerBase {
 			switch(towerType) {
-				case TOWER:
+				case TOWER_01:
 					return new Tower_01();
 					break;
 				case TOWER_02:
-					return new Tower_01();
+					return new Tower_02();
 					break;
 				default:
 					throw new Error("Invalid kind of tower specified");

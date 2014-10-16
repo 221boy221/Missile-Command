@@ -3,6 +3,7 @@ package towers {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import weapons.Projectile;
 	import weapons.TowerWeapon;
 	import weapons.Weapon;
 	/**
@@ -11,7 +12,7 @@ package towers {
 	 */
 	
 	// ABSTRACT Class
-	public class Tower extends Sprite {
+	public class TowerBase extends Sprite {
 		
 		private var weapon:Weapon = new TowerWeapon();
 		//protected var pro : uint;
@@ -49,13 +50,16 @@ package towers {
 		internal function fire(e:MouseEvent, pro:uint):void {
 			var _radians : Number,
 				_spawnPosX : Number,
-				_spawnPosY : Number;
+				_spawnPosY : Number,
+				projectile : Projectile;
 				
 			_radians = rotation * Math.PI / 180;
 			_spawnPosX = x + 20 * Math.cos(_radians);
 			_spawnPosY = y + 20 * Math.sin(_radians);
 			
+			//projectile = 
 			weapon.fire(pro, stage, _spawnPosX, _spawnPosY, rotation);
+			//projectiles.push(projectile);
 			e.updateAfterEvent();
 		}
 	}

@@ -1,9 +1,8 @@
 package  {
-	import events.ShootEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import towers.Tower;
+	import towers.TowerBase;
 	import towers.TowerFactory;
 	import weapons.Projectile;
 	import towers.Tower_01;
@@ -32,10 +31,18 @@ package  {
 		
 		private function createTower():void {
 			var towerFactory:TowerFactory = new TowerFactory(),
-				tower : Tower;
+				tower : TowerBase;
 			
 			for (var i:Number = 0; i < 3; i++) {
-				tower = towerFactory.addTower(TowerFactory.TOWER, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+				switch (Math.ceil(Math.random() * 2)) {
+					case 1:
+						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						break;
+					case 2:
+						tower = towerFactory.addTower(TowerFactory.TOWER_02, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						break;
+				}
+				//tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 				_towers.push(tower);
 			}
 		}

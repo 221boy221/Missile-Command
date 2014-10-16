@@ -4,7 +4,6 @@ package towers {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import weapons.Rocket;
-	import towers.Tower_01;
 	import weapons.TowerWeapon;
 	import weapons.Weapon;
 	
@@ -12,7 +11,7 @@ package towers {
 	 * ...
 	 * @author Boy Voesten
 	 */
-	internal class Tower_01 extends TowerBase {
+	internal class Tower_02 extends TowerBase {
 		
 		private var _towerArt : TowerCannon = new TowerCannon();
 		
@@ -26,7 +25,7 @@ package towers {
 		}
 		
 		private function fire2(e:MouseEvent):void {
-			super.fire(e, TowerWeapon.ROCKET);
+			super.fire(e, TowerWeapon.MISSILE);
 			
 		}
 		

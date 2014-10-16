@@ -1,4 +1,5 @@
 package weapons {
+	import events.RemoveEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -10,6 +11,8 @@ package weapons {
 	 */
 	public class Projectile extends Sprite {
 		
+		//public static var REMOVE : String;
+		
 		internal var speed	: Number = 5;
 		internal var _stepX : Number;
 		internal var _stepY : Number;
@@ -18,11 +21,9 @@ package weapons {
 		internal var b2 : Number;
 		
 		// ABSTRACT
-		internal function drawProjectile():void {	}
+		internal function drawProjectile():void { }
 		
-		internal function arm():void {
-			//speed = 5;
-		}
+		internal function arm():void { }
 		
 		internal function release():void {
 			addEventListener(Event.ENTER_FRAME, update);
@@ -33,30 +34,23 @@ package weapons {
 			y = yLoc;
 		}
 		
-		
 		internal function setDir(angle:Number):void {
 			var _radian : Number;
 			
 			// Put parameter into var
 			rotation = angle;
-			trace("rotation: " + rotation);
 			
 			// Turn var angle into Radians
 			_radian = angle / (180 / Math.PI);
-			trace("radian: " + _radian);
-			
+						
 			// Get coördinates to fly to
 			_stepX = Math.cos(_radian) * speed;
 			_stepY = Math.sin(_radian) * speed;
-			trace("stepX: " + _stepX);
-			trace("stepY: " + _stepY);
 			
 			// Get click position
 			_mouseP = new Point(mouseX, mouseY);
-			trace("mouseP: " + _mouseP);
-			
 			_mouseP = localToGlobal(_mouseP);
-			trace("mouseP local to global: " + _mouseP);
+			
 		}
 		
 		internal function checkDir():void {
@@ -65,7 +59,7 @@ package weapons {
 				trace("remove / explode");
 				// sometimes detects it twice
 				// Tell the game that we just shot a rocket
-				//dispatchEvent(new ShootEvent(REMOVE, this));
+				//dispatchEvent(new RemoveEvent(REMOVE, this));
 			}
 			
 			// Check if out of bounds
