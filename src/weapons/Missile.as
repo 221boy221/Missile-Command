@@ -6,12 +6,10 @@ package weapons {
 	 */
 	public class Missile extends Projectile {
 		
-		private var _rocketArt : rocketArt = new rocketArt;
-		
 		override internal function drawProjectile():void {
-			addChild(_rocketArt);
-			_rocketArt.scaleX = 2;
-			_rocketArt.scaleY = 2;
+			asset = new rocketArt();
+			asset.scaleX = 2;
+			asset.scaleY = 2;
 		}
 		
 		override internal function arm():void {

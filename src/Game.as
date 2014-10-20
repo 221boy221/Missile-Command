@@ -24,8 +24,6 @@ package  {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// Entry
 			
-			//addEventListener(Event.ENTER_FRAME, update);
-			
 			createTower();
 		}
 		
@@ -39,10 +37,10 @@ package  {
 						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
 					case 2:
-						tower = towerFactory.addTower(TowerFactory.TOWER_02, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
 				}
-				//tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+				
 				_towers.push(tower);
 			}
 		}

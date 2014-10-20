@@ -57,9 +57,7 @@ package towers {
 			_spawnPosX = x + 20 * Math.cos(_radians);
 			_spawnPosY = y + 20 * Math.sin(_radians);
 			
-			//projectile = 
 			weapon.fire(pro, stage, _spawnPosX, _spawnPosY, rotation);
-			//projectiles.push(projectile);
 			e.updateAfterEvent();
 		}
 	}

@@ -1,5 +1,6 @@
 package weapons {
 	import events.RemoveEvent;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -13,19 +14,23 @@ package weapons {
 		
 		//public static var REMOVE : String;
 		
-		internal var speed	: Number = 5;
+		internal var speed	: Number;
 		internal var _stepX : Number;
 		internal var _stepY : Number;
 		internal var _mouseP : Point;
 		internal var a2 : Number;
 		internal var b2 : Number;
+		internal var asset : MovieClip;
 		
 		// ABSTRACT
 		internal function drawProjectile():void { }
 		
-		internal function arm():void { }
+		internal function arm():void { 
+			speed = 5;
+		}
 		
 		internal function release():void {
+			addChild(asset);
 			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
@@ -44,8 +49,8 @@ package weapons {
 			_radian = angle / (180 / Math.PI);
 						
 			// Get coördinates to fly to
-			_stepX = Math.cos(_radian) * speed;
-			_stepY = Math.sin(_radian) * speed;
+			_stepX = Math.cos(_radian);
+			_stepY = Math.sin(_radian);
 			
 			// Get click position
 			_mouseP = new Point(mouseX, mouseY);
@@ -55,31 +60,36 @@ package weapons {
 		
 		internal function checkDir():void {
 			// Check if projectile arrived
-			if (Math.sqrt(a2 + b2) < 5) {
-				trace("remove / explode");
-				// sometimes detects it twice
-				// Tell the game that we just shot a rocket
-				//dispatchEvent(new RemoveEvent(REMOVE, this));
+			if (Math.sqrt(a2 + b2) < 10) {
+				asset.gotoAndStop(2);
+				speed = 0;
+				trace("- Remove");
 			}
-			
+			/*
 			// Check if out of bounds
 			if (x > stage.stageWidth +10 || x < -10 || y > stage.stageHeight +10 || y < -10) {
 				removeEventListener(Event.ENTER_FRAME, update);
 				stage.removeChild(this);
 			}
+			*/
 		}
 		
 		internal function update(e:Event):void {
 			// Fly to the coördinates
-			x += _stepX;
-			y += _stepY;
+			x += _stepX * speed;
+			y += _stepY * speed;
 			
 			// Store projectile's current pos
 			a2 = (_mouseP.x - x) * (_mouseP.x - x);
 			b2 = (_mouseP.y - y) * (_mouseP.y - y);
 			
 			// Check for removal
-			checkDir();
+			if (asset.currentFrame == asset.totalFrames) {
+				removeEventListener(Event.ENTER_FRAME, update);
+				stage.removeChild(this);
+			} else {
+				checkDir();	
+			}
 		}
 		
 		
