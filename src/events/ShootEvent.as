@@ -1,17 +1,18 @@
 package events {
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import weapons.Projectile;
 	
 	/**
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class RemoveEvent extends Event {
+	public class ShootEvent extends Event {
 		
 		private var _projectile : Projectile;
 		
-		public function RemoveEvent(type:String, projectile : Projectile) {
-			super(type);
+		public function ShootEvent(type:String, projectile : Projectile, bub : Boolean = true) {
+			super(type,bub);
 			
 			_projectile = projectile;
 		}

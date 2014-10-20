@@ -1,5 +1,4 @@
 package weapons {
-	import events.RemoveEvent;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -12,7 +11,7 @@ package weapons {
 	 */
 	public class Projectile extends Sprite {
 		
-		//public static var REMOVE : String;
+		private var _removeAble:Boolean;
 		
 		internal var speed	: Number;
 		internal var _stepX : Number;
@@ -20,7 +19,7 @@ package weapons {
 		internal var _mouseP : Point;
 		internal var a2 : Number;
 		internal var b2 : Number;
-		internal var asset : MovieClip;
+		public var asset : MovieClip;
 		
 		// ABSTRACT
 		internal function drawProjectile():void { }
@@ -31,7 +30,7 @@ package weapons {
 		
 		internal function release():void {
 			addChild(asset);
-			addEventListener(Event.ENTER_FRAME, update);
+			asset.gotoAndStop(1);
 		}
 		
 		internal function setLoc(xLoc:int, yLoc:int):void {
@@ -60,21 +59,15 @@ package weapons {
 		
 		internal function checkDir():void {
 			// Check if projectile arrived
-			if (Math.sqrt(a2 + b2) < 10) {
-				asset.gotoAndStop(2);
-				speed = 0;
-				trace("- Remove");
+			
+			if (this.y <= _mouseP.y) {
+				trace("Remove me");
+				removeAble = true;
 			}
-			/*
-			// Check if out of bounds
-			if (x > stage.stageWidth +10 || x < -10 || y > stage.stageHeight +10 || y < -10) {
-				removeEventListener(Event.ENTER_FRAME, update);
-				stage.removeChild(this);
-			}
-			*/
+			
 		}
 		
-		internal function update(e:Event):void {
+		public function update():void {
 			// Fly to the coördinates
 			x += _stepX * speed;
 			y += _stepY * speed;
@@ -83,13 +76,17 @@ package weapons {
 			a2 = (_mouseP.x - x) * (_mouseP.x - x);
 			b2 = (_mouseP.y - y) * (_mouseP.y - y);
 			
-			// Check for removal
-			if (asset.currentFrame == asset.totalFrames) {
-				removeEventListener(Event.ENTER_FRAME, update);
-				stage.removeChild(this);
-			} else {
-				checkDir();	
-			}
+			checkDir();
+		}
+		
+		public function get removeAble():Boolean 
+		{
+			return _removeAble;
+		}
+		
+		public function set removeAble(value:Boolean):void 
+		{
+			_removeAble = value;
 		}
 		
 		

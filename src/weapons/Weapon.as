@@ -9,7 +9,7 @@ package weapons {
 	// Skeleton for weapons
 	public class Weapon {
 		
-		public function fire(projectileType:uint, target:Stage, x:int, y:int, angle:Number):void {
+		public function fire(projectileType:uint, target:Stage, x:int, y:int, angle:Number):Projectile {
 			var projectile : Projectile = createProjectile(projectileType);
 			
 			projectile.drawProjectile();
@@ -18,6 +18,8 @@ package weapons {
 			projectile.arm();
 			target.addChild(projectile);
 			projectile.release();
+			
+			return projectile;
 		}
 		
 		// ABSTRACT

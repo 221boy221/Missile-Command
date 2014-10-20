@@ -1,4 +1,5 @@
 package  {
+	import events.ShootEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -15,6 +16,7 @@ package  {
 	public class Game extends Sprite {
 		
 		private var _towers : Array = [];
+		private var projectiles : Array = [];
 		
 		public function Game() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -25,6 +27,9 @@ package  {
 			// Entry
 			
 			createTower();
+			addEventListener(Event.ENTER_FRAME, update);
+			stage.addEventListener(TowerBase.SHOOT, addToArray);
+			stage.addEventListener(MouseEvent.CLICK, mouseDown);
 		}
 		
 		private function createTower():void {
@@ -37,7 +42,7 @@ package  {
 						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
 					case 2:
-						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						tower = towerFactory.addTower(TowerFactory.TOWER_02, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
 				}
 				
@@ -45,7 +50,43 @@ package  {
 			}
 		}
 		
+		private function addToArray(e : ShootEvent):void {
+			projectiles.push(e.projectile);
+			trace(projectiles);
+		}
 		
+		private function mouseDown(e:MouseEvent):void {
+			getShooter();
+		}
+		
+		private function getShooter():void {
+			var shooter : int;
+			
+			shooter = Math.random() * _towers.length;
+			_towers[shooter].shoot();
+		}
+		
+		private function update(e:Event):void {
+			var projectilesLength : Number = projectiles.length,
+				currentProjectile : Projectile;
+			
+			for (var i : int = projectilesLength - 1; i >= 0; i--) {
+				currentProjectile = projectiles[i];
+				currentProjectile.update();
+				/*
+				if (currentProjectile.asset.currentLabel == "StartExplosion") {
+					trace("START");
+				} 
+				if (currentProjectile.asset.currentFrame == currentProjectile.asset.framesLoaded) {
+					trace("END");
+				}
+				*/
+				if (currentProjectile.removeAble == true) {
+					projectiles.splice(i, 1);
+				}
+			}
+			
+		}
 		
 		/*
 		private var _towers		:	Array = [];

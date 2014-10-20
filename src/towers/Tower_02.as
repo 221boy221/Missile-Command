@@ -21,12 +21,7 @@ package towers {
 		
 		override internal function initTower():void {
 			addEventListener(Event.ENTER_FRAME, update);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, fire2);
-		}
-		
-		private function fire2(e:MouseEvent):void {
-			super.fire(e, TowerWeapon.MISSILE);
-			
+			projectileType = TowerWeapon.MISSILE;
 		}
 		
 		override internal function update(e:Event):void {

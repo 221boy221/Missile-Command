@@ -1,4 +1,5 @@
 package towers {
+	import events.ShootEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -14,8 +15,9 @@ package towers {
 	// ABSTRACT Class
 	public class TowerBase extends Sprite {
 		
-		private var weapon:Weapon = new TowerWeapon();
-		//protected var pro : uint;
+		private var weapon : Weapon = new TowerWeapon();
+		public static const SHOOT : String = new String;
+		protected var projectileType : uint;
 		
 		internal function setLoc(xLoc:int, yLoc:int):void {
 			x = xLoc;
@@ -47,7 +49,8 @@ package towers {
 			rotation = _rotationInRadians * (180 / Math.PI);
 		}
 		
-		internal function fire(e:MouseEvent, pro:uint):void {
+		// Every tower is able to shoot, but the game decides when to run it
+		public function shoot():void {
 			var _radians : Number,
 				_spawnPosX : Number,
 				_spawnPosY : Number,
@@ -57,8 +60,8 @@ package towers {
 			_spawnPosX = x + 20 * Math.cos(_radians);
 			_spawnPosY = y + 20 * Math.sin(_radians);
 			
-			weapon.fire(pro, stage, _spawnPosX, _spawnPosY, rotation);
-			e.updateAfterEvent();
+			projectile = weapon.fire(projectileType, stage, _spawnPosX, _spawnPosY, rotation);
+			dispatchEvent(new ShootEvent(SHOOT, projectile));
 		}
 	}
 
