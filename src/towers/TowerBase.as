@@ -61,7 +61,7 @@ package towers {
 			_spawnPosY = y + 20 * Math.sin(_radians);
 			
 			projectile = weapon.fire(projectileType, stage, _spawnPosX, _spawnPosY, rotation);
-			dispatchEvent(new ShootEvent(SHOOT, projectile));
+			dispatchEvent(new ShootEvent(SHOOT, projectile, true));
 		}
 	}
 

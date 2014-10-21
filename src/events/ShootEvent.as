@@ -11,8 +11,8 @@ package events {
 		
 		private var _projectile : Projectile;
 		
-		public function ShootEvent(type:String, projectile : Projectile, bub : Boolean = true) {
-			super(type,bub);
+		public function ShootEvent(type:String, projectile : Projectile, bubbles : Boolean = false) {
+			super(type, bubbles);
 			
 			_projectile = projectile;
 		}

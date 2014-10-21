@@ -17,6 +17,7 @@ package  {
 		
 		private var _towers : Array = [];
 		private var projectiles : Array = [];
+		private var shooter : int;
 		
 		public function Game() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -28,14 +29,39 @@ package  {
 			
 			createTower();
 			addEventListener(Event.ENTER_FRAME, update);
-			stage.addEventListener(TowerBase.SHOOT, addToArray);
-			stage.addEventListener(MouseEvent.CLICK, mouseDown);
+			stage.addEventListener(Projectile.EXPLODE, explodeProjectile);
+			stage.addEventListener(TowerBase.SHOOT, addProjectile);
+			stage.addEventListener(MouseEvent.CLICK, mouseClick);
 		}
 		
+		private function explodeProjectile(e:Event):void {
+			var projectile : Projectile = e.target as Projectile;
+				//explosion : Explosion;
+			
+			//explosion = new Explosion;
+			//explosion.x = projectile.x;
+			//explosion.y = projectile.y;
+			//addChild(explosion);
+			//explosions.push(explosion);
+			removeProjectile(projectile);
+		}
+		
+		// Loop
+		private function update(e:Event):void {
+			var projectilesLength : Number = projectiles.length,
+				currentProjectile : Projectile;
+				
+			for (var i : int = projectilesLength - 1; i >= 0; i--) {
+				currentProjectile = projectiles[i];
+				currentProjectile.update();
+			}
+		}
+		
+		// Random generate which tower will spawn
 		private function createTower():void {
 			var towerFactory:TowerFactory = new TowerFactory(),
 				tower : TowerBase;
-			
+				
 			for (var i:Number = 0; i < 3; i++) {
 				switch (Math.ceil(Math.random() * 2)) {
 					case 1:
@@ -45,47 +71,33 @@ package  {
 						tower = towerFactory.addTower(TowerFactory.TOWER_02, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
 				}
-				
 				_towers.push(tower);
 			}
 		}
 		
-		private function addToArray(e : ShootEvent):void {
-			projectiles.push(e.projectile);
-			trace(projectiles);
-		}
-		
-		private function mouseDown(e:MouseEvent):void {
+		// On mouse click
+		private function mouseClick(e:MouseEvent):void {
 			getShooter();
 		}
 		
-		private function getShooter():void {
-			var shooter : int;
-			
+		// Random generate which tower will shoot
+		private function getShooter():void {			
 			shooter = Math.random() * _towers.length;
 			_towers[shooter].shoot();
 		}
 		
-		private function update(e:Event):void {
-			var projectilesLength : Number = projectiles.length,
-				currentProjectile : Projectile;
-			
-			for (var i : int = projectilesLength - 1; i >= 0; i--) {
-				currentProjectile = projectiles[i];
-				currentProjectile.update();
-				/*
-				if (currentProjectile.asset.currentLabel == "StartExplosion") {
-					trace("START");
-				} 
-				if (currentProjectile.asset.currentFrame == currentProjectile.asset.framesLoaded) {
-					trace("END");
-				}
-				*/
-				if (currentProjectile.removeAble == true) {
-					projectiles.splice(i, 1);
-				}
-			}
-			
+		// Add given projectile to projectiles array
+		private function addProjectile(e : ShootEvent):void {
+			projectiles.push(e.projectile);
+		}
+		
+		// Remove given projectile from projectilss array
+		private function removeProjectile(pro:Projectile):void {
+			var projectile : Projectile = pro,
+				index : int = projectiles.indexOf(projectile);
+				
+			stage.removeChild(projectile);	
+			projectiles.splice(index, 1);		
 		}
 		
 		/*

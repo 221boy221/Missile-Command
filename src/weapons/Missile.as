@@ -8,12 +8,12 @@ package weapons {
 		
 		override internal function drawProjectile():void {
 			asset = new rocketArt();
-			asset.scaleX = 2;
-			asset.scaleY = 2;
+			asset.scaleX = 1.5;
+			asset.scaleY = 1.5;
 		}
 		
 		override internal function arm():void {
-			speed = 3;
+			speed = 15;
 		}
 		
 	}

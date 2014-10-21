@@ -30,8 +30,6 @@ package {
 			stage.focus = stage;
 		}
 		
-		
-		
 	}
 	
 }

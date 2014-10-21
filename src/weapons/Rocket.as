@@ -11,7 +11,7 @@ package weapons {
 		}
 		
 		override internal function arm():void {
-			speed = 5;
+			speed = 15;
 		}
 		
 	}
