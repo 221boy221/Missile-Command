@@ -1,4 +1,5 @@
 package weapons {
+	import explosions.ExplosionFactory;
 	
 	/**
 	 * ...
@@ -10,6 +11,8 @@ package weapons {
 			asset = new rocketArt();
 			asset.scaleX = 1.5;
 			asset.scaleY = 1.5;
+			
+			explosionType = ExplosionFactory.EXPLOSION_BIG;
 		}
 		
 		override internal function arm():void {

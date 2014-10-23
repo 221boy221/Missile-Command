@@ -32,7 +32,6 @@ package towers {
 					throw new Error("Invalid kind of tower specified");
 					return null;
 			}
-		
 		}
 		
 	}

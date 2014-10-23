@@ -5,9 +5,11 @@ package  {
 	import flash.events.MouseEvent;
 	import towers.TowerBase;
 	import towers.TowerFactory;
+	import explosions.ExplosionBase;
+	import explosions.ExplosionFactory;
 	import weapons.Projectile;
-	import towers.Tower_01;
 	import weapons.Rocket;
+	import towers.Tower_01;
 	
 	/**
 	 * ...
@@ -15,8 +17,11 @@ package  {
 	 */
 	public class Game extends Sprite {
 		
-		private var _towers : Array = [];
-		private var projectiles : Array = [];
+		private var _towers 	: Array = [];
+		private var _projectiles : Array = [];
+		private var _explosions 	: Array = [];
+		private var towerFactory : TowerFactory = new TowerFactory();
+		private var explosionFactory : ExplosionFactory = new ExplosionFactory();
 		private var shooter : int;
 		
 		public function Game() {
@@ -27,40 +32,39 @@ package  {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// Entry
 			
-			createTower();
+			createTowers();
 			addEventListener(Event.ENTER_FRAME, update);
-			stage.addEventListener(Projectile.EXPLODE, explodeProjectile);
 			stage.addEventListener(TowerBase.SHOOT, addProjectile);
 			stage.addEventListener(MouseEvent.CLICK, mouseClick);
-		}
-		
-		private function explodeProjectile(e:Event):void {
-			var projectile : Projectile = e.target as Projectile;
-				//explosion : Explosion;
+			stage.addEventListener(Projectile.EXPLODE, explodeProjectile);
+			stage.addEventListener(ExplosionBase.REMOVE_EXPLOSION, removeExplosion);
 			
-			//explosion = new Explosion;
-			//explosion.x = projectile.x;
-			//explosion.y = projectile.y;
-			//addChild(explosion);
-			//explosions.push(explosion);
-			removeProjectile(projectile);
 		}
 		
-		// Loop
+		// Loops
 		private function update(e:Event):void {
-			var projectilesLength : Number = projectiles.length,
-				currentProjectile : Projectile;
+			var projectilesLength : Number = _projectiles.length,
+				explosionsLength : Number = _explosions.length,
+				currentProjectile : Projectile,
+				currentExplosion : ExplosionBase;
 				
+			// Loop through the projectiles array
 			for (var i : int = projectilesLength - 1; i >= 0; i--) {
-				currentProjectile = projectiles[i];
+				currentProjectile = _projectiles[i];
 				currentProjectile.update();
 			}
+			
+			// Loop through the explosions array
+			for (var j : int = explosionsLength - 1; j >= 0; j--) {
+				currentExplosion = _explosions[j];
+				currentExplosion.update();
+			}
+			
 		}
 		
 		// Random generate which tower will spawn
-		private function createTower():void {
-			var towerFactory:TowerFactory = new TowerFactory(),
-				tower : TowerBase;
+		private function createTowers():void {
+			var tower : TowerBase;
 				
 			for (var i:Number = 0; i < 3; i++) {
 				switch (Math.floor(Math.random() * 2) + 1) {
@@ -80,71 +84,47 @@ package  {
 			getShooter();
 		}
 		
-		// Random generate which tower will shoot
+		// Check which tower is closest to the cursor
 		private function getShooter():void {		
-			/*shooter = Math.random() * _towers.length;
-			_towers[shooter].shoot();*/
 			_towers.sortOn("distance", Array.NUMERIC);
 			_towers[0].shoot();
 		}
 		
-		
+		// Create explosion on projectile
+		private function explodeProjectile(e:Event):void {
+			var projectile : Projectile = e.target as Projectile,
+				explosion : ExplosionBase;
+				
+			explosion = explosionFactory.addExplosion(projectile.explosionType, this.stage, projectile.x, projectile.y);
+			_explosions.push(explosion);
+			
+			removeProjectile(projectile);
+		}
 		
 		// Add given projectile to projectiles array
 		private function addProjectile(e : ShootEvent):void {
-			projectiles.push(e.projectile);
+			_projectiles.push(e.projectile);
 		}
 		
 		// Remove given projectile from projectilss array
 		private function removeProjectile(pro:Projectile):void {
 			var projectile : Projectile = pro,
-				index : int = projectiles.indexOf(projectile);
+				index : int = _projectiles.indexOf(projectile);
 				
 			stage.removeChild(projectile);	
-			projectiles.splice(index, 1);		
+			_projectiles.splice(index, 1);		
+		}
+		
+		// Remove given explosion from explosions array
+		private function removeExplosion(e:Event):void {
+			var explosion : ExplosionBase = e.target as ExplosionBase,
+				index : int = _explosions.indexOf(explosion);
+			
+			stage.removeChild(explosion);
+			_explosions.splice(index, 1);
 		}
 		
 		/*
-		private var _towers		:	Array = [];
-		private var _rockets	:	Array = [];
-		private var _tower		:	Tower_01 = new Tower_01;
-		private var _isOutOfBounds	:	Boolean = false;
-		
-		public function Game() {
-			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
-		
-		private function init(e:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// Entry
-			
-			addEventListener(Event.ENTER_FRAME, update);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-			
-			getNewTower();
-			getNewTower();
-			getNewTower();
-		}
-		
-		private function fire(e:ShootEvent):void {
-			var _newRocket : Rocket = e.rocket;
-			_rockets.push(_newRocket);
-			addChild(_newRocket);
-			
-			trace(_rockets);
-		}
-		
-		private function mouseDown(e:MouseEvent):void {
-			getShooter();
-		}
-		
-		private function getShooter():void {
-			var shooter : int;
-			
-			shooter = Math.random() * _towers.length;
-			_towers[shooter].shoot();
-		}
-		
 		private function update(e:Event):void {
 			var rocketsLength	:	int = _rockets.length,
 				currentRocket	:	Projectile;
@@ -157,19 +137,6 @@ package  {
 					_rockets.splice(i, 1);
 				}
 			}
-		}
-		
-		private function isOutOfBounds(rocket : Projectile):Boolean {
-			return (rocket.x > stage.stageWidth +10 || rocket.x < -10 || rocket.y > stage.stageHeight +10 || rocket.y < -10);	
-		}
-		
-		private function getNewTower():void {
-			var _tower : Tower_01 = new Tower_01;
-			addChild(_tower);
-			_tower.x = Math.random() * stage.stageWidth;
-			_tower.y = stage.stageHeight - 100;
-			_towers.push(_tower);
-			_tower.addEventListener(Tower_01.SHOOT, fire);
 		}
 		*/
 		

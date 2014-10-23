@@ -12,15 +12,16 @@ package weapons {
 	public class Projectile extends Sprite {
 		
 		static public const EXPLODE:String = "EXPLODE";
-		public var asset : MovieClip;
+		internal var asset : MovieClip;
 		internal var speed : Number;
 		internal var _stepX : Number;
 		internal var _stepY : Number;
 		internal var _mouseP : Point;
+		public var explosionType : uint;
 		
 		// ABSTRACT
 		internal function drawProjectile():void {
-		
+			
 		}
 		
 		internal function arm():void { 

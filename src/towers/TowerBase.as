@@ -21,14 +21,19 @@ package towers {
 		public var distance : Number;
 		protected var projectileType : uint;
 		
+		// ABSTRACT Methods
+		internal function drawTower():void { 
+			
+		}
+		
 		internal function setLoc(xLoc:int, yLoc:int):void {
 			x = xLoc;
 			y = yLoc;
 		}
 		
-		// ABSTRACT Methods
-		internal function drawTower():void { }
-		internal function initTower():void { }
+		internal function initTower():void {
+			
+		}
 		
 		internal function update(e:Event):void {
 			pointAtMouse();
