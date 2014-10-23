@@ -1,29 +1,29 @@
 package weapons {
 	import explosions.ExplosionFactory;
 	import flash.events.Event;
-	
 	/**
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class Missile extends Projectile {
+	public class EnemyMissile extends Projectile {
 		
 		override internal function drawProjectile():void {
 			asset = new rocketArt();
-			asset.scaleX = 1.5;
-			asset.scaleY = 1.5;
+			asset.scaleX = 0.5;
+			asset.scaleY = 0.5;
 			
-			explosionType = ExplosionFactory.EXPLOSION_BIG;
+			explosionType = ExplosionFactory.EXPLOSION_SMALL;
 		}
 		
 		override internal function arm():void {
-			speed = 15;
+			speed = 5;
 		}
 		
 		override internal function checkDir():void {
-			if (this.y <= _clickTarget.y) {
+			if (this.y >= _target.y) {
 				super.explode();
 			}
+			
 		}
 		
 	}

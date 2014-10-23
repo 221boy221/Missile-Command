@@ -65,13 +65,14 @@ package towers {
 			var _radians : Number,
 				_spawnPosX : Number,
 				_spawnPosY : Number,
+				target : Point = new Point(mouseX, mouseY),
 				projectile : Projectile;
 				
 			_radians = rotation * Math.PI / 180;
-			_spawnPosX = x + 20 * Math.cos(_radians);
-			_spawnPosY = y + 20 * Math.sin(_radians);
+			_spawnPosX = x - 10 * Math.cos(_radians);
+			_spawnPosY = y - 10 * Math.sin(_radians);
 			
-			projectile = weapon.fire(projectileType, stage, _spawnPosX, _spawnPosY, rotation);
+			projectile = weapon.fire(projectileType, stage, _spawnPosX, _spawnPosY, rotation, target);
 			dispatchEvent(new ShootEvent(SHOOT, projectile, true));
 		}
 	}

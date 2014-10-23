@@ -16,7 +16,8 @@ package weapons {
 		internal var speed : Number;
 		internal var _stepX : Number;
 		internal var _stepY : Number;
-		internal var _mouseP : Point;
+		internal var _target : Point;
+		internal var _clickTarget : Point;
 		public var explosionType : uint;
 		
 		// ABSTRACT
@@ -38,7 +39,7 @@ package weapons {
 		}
 		
 		// Calc and collect all the info
-		internal function setDir(angle:Number):void {
+		internal function setDir(angle:Number, target:Point):void {
 			var _radian : Number;
 			
 			// Put parameter into var
@@ -52,15 +53,13 @@ package weapons {
 			_stepY = Math.sin(_radian);
 			
 			// Get click position
-			_mouseP = new Point(mouseX, mouseY);
-			_mouseP = localToGlobal(_mouseP);
+			_target = new Point(target.x, target.y);
+			_clickTarget = localToGlobal(_target);
 		}
 		
 		// Check if projectile arrived
 		internal function checkDir():void {
-			if (this.y <= _mouseP.y) {
-				dispatchEvent(new Event(EXPLODE, true));
-			}
+			
 		}
 		
 		public function update():void {
@@ -69,7 +68,11 @@ package weapons {
 			y += _stepY * speed;
 			
 			checkDir();
-		}		
+		}
+		
+		public function explode():void {
+			dispatchEvent(new Event(EXPLODE, true));
+		}
 		
 	}
 

@@ -1,5 +1,6 @@
 package weapons {
 	import explosions.ExplosionFactory;
+	import flash.events.Event;
 	
 	/**
 	 * ...
@@ -15,6 +16,12 @@ package weapons {
 		
 		override internal function arm():void {
 			speed = 15;
+		}
+		
+		override internal function checkDir():void {
+			if (this.y <= _clickTarget.y) {
+				super.explode();
+			}
 		}
 		
 	}
