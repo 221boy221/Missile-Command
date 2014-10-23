@@ -13,7 +13,7 @@ package towers {
 	 */
 	internal class Tower_01 extends TowerBase {
 		
-		private var _towerArt : TowerCannon = new TowerCannon();
+		private var _towerArt : TowerArt_01 = new TowerArt_01();
 		
 		override internal function drawTower():void {
 			addChild(_towerArt);

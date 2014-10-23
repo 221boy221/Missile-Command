@@ -63,7 +63,7 @@ package  {
 				tower : TowerBase;
 				
 			for (var i:Number = 0; i < 3; i++) {
-				switch (Math.ceil(Math.random() * 2)) {
+				switch (Math.floor(Math.random() * 2) + 1) {
 					case 1:
 						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
 						break;
@@ -81,10 +81,14 @@ package  {
 		}
 		
 		// Random generate which tower will shoot
-		private function getShooter():void {			
-			shooter = Math.random() * _towers.length;
-			_towers[shooter].shoot();
+		private function getShooter():void {		
+			/*shooter = Math.random() * _towers.length;
+			_towers[shooter].shoot();*/
+			_towers.sortOn("distance", Array.NUMERIC);
+			_towers[0].shoot();
 		}
+		
+		
 		
 		// Add given projectile to projectiles array
 		private function addProjectile(e : ShootEvent):void {

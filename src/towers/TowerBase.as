@@ -4,6 +4,7 @@ package towers {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Vector3D;
 	import weapons.Projectile;
 	import weapons.TowerWeapon;
 	import weapons.Weapon;
@@ -17,6 +18,7 @@ package towers {
 		
 		private var weapon : Weapon = new TowerWeapon();
 		public static const SHOOT : String = new String;
+		public var distance : Number;
 		protected var projectileType : uint;
 		
 		internal function setLoc(xLoc:int, yLoc:int):void {
@@ -36,6 +38,7 @@ package towers {
 			var _mouseP : Point,
 				_diffX : Number,
 				_diffY : Number,
+				_masureDistance : Vector3D,
 				_rotationInRadians : Number;
 			
 			// Calc diff between player and mouse
@@ -43,6 +46,9 @@ package towers {
 			_mouseP = localToGlobal(_mouseP);
 			_diffX = _mouseP.x - this.x;
 			_diffY = _mouseP.y - this.y;
+			
+			_masureDistance = new Vector3D(_diffX, _diffY);
+			distance = _masureDistance.length;
 			
 			// Change the values to radians and rotate the tower
 			_rotationInRadians = Math.atan2(_diffY, _diffX);
