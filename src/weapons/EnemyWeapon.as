@@ -3,8 +3,7 @@ package weapons {
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class EnemyWeapon extends Weapon 
-	{
+	public class EnemyWeapon extends Weapon {
 		
 		public static const ENEMYMISSILE : uint = 0;
 		

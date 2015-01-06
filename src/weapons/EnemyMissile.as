@@ -22,6 +22,7 @@ package weapons {
 		override internal function checkDir():void {
 			if (this.y >= _target.y) {
 				super.explode();
+				_selectedTower.takeDamage(1);
 			}
 			
 		}

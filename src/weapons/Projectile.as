@@ -3,6 +3,7 @@ package weapons {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
+	import towers.TowerBase;
 	import weapons.Projectile;
 	
 	/**
@@ -11,21 +12,28 @@ package weapons {
 	 */
 	public class Projectile extends Sprite {
 		
-		static public const EXPLODE:String = "EXPLODE";
-		internal var asset : MovieClip;
-		internal var speed : Number;
-		internal var _stepX : Number;
-		internal var _stepY : Number;
-		internal var _target : Point;
-		internal var _clickTarget : Point;
-		public var explosionType : uint;
+		static public const EXPLODE	:String 		= "EXPLODE";
+		internal var asset 			: MovieClip;
+		internal var speed 			: Number;
+		internal var _stepX 		: Number;
+		internal var _stepY 		: Number;
+		internal var _target 		: Point;
+		internal var _clickTarget 	: Point;
+		internal var _selectedTower : TowerBase;
+		public var explosionType 	: uint;
 		
 		// ABSTRACT
 		internal function drawProjectile():void {
 			
 		}
 		
-		internal function arm():void { 
+		internal function tower(selectedTower:TowerBase):void {
+			if (selectedTower) {
+				_selectedTower = selectedTower;
+			}
+		}
+		
+		internal function arm():void {
 			speed = 5;
 		}
 		

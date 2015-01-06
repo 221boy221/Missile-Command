@@ -1,8 +1,13 @@
 package  {
+	import flash.display.DisplayObject;
+	import vehicles.VehicleBase;
+	import vehicles.VehicleFactory;
 	import events.ShootEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.media.SoundChannel;
+	import flash.media.SoundTransform;
 	import flash.text.TextField;
 	import towers.TowerBase;
 	import towers.TowerFactory;
@@ -19,17 +24,23 @@ package  {
 	 */
 	public class Game extends Sprite {
 		
-		private var _towers : Array = [];
-		private var _projectiles : Array = [];
-		private var _explosions : Array = [];
-		private var _enemyProjectiles : Array = [];
-		private var towerFactory : TowerFactory = new TowerFactory();
-		private var explosionFactory : ExplosionFactory = new ExplosionFactory();
-		private var shooter : int;
-		private var waveSystem : WaveSystem;
-		private var scoreText : TextField = new TextField();
-		private var hp:int;
-		public var score : int = 0;
+		private var _towers 			: Array				= [];
+		private var _projectiles 		: Array				= [];
+		private var _explosions 		: Array				= [];
+		private var _enemyProjectiles 	: Array				= [];
+		private var _vehicles		 	: Array				= [];
+		private var _towerFactory 		: TowerFactory 		= new TowerFactory();
+		private var _explosionFactory 	: ExplosionFactory	= new ExplosionFactory();
+		private var _vehicleFactory		: VehicleFactory	= new VehicleFactory();
+		private var _ui					: UI				= new UI();
+		private var _shooter 			: int;
+		private var _waveSystem 		: WaveSystem;
+		private var _gameSC 			: SoundChannel;
+		private var _gameBG_SFX 		: GameBG_SFX 		= new GameBG_SFX();
+		private var _trans				: SoundTransform 	= new SoundTransform(0.5,0); 
+		private var _amountOfVehicles	: int				= 10;
+		public var score 				: int				= 0;
+		
 		
 		public function Game() {
 			addEventListener(Event.ADDED_TO_STAGE, init);
@@ -40,35 +51,40 @@ package  {
 			// Entry
 			  
 			createTowers();
+			createVehicles();
+			
 			addEventListener(Event.ENTER_FRAME, update);
 			stage.addEventListener(TowerBase.SHOOT, addProjectile);
+			stage.addEventListener(TowerBase.TOWER_DOWN, destroyTower);
 			stage.addEventListener(WaveSystem.SHOOT, addProjectile);
 			stage.addEventListener(MouseEvent.CLICK, mouseClick);
 			stage.addEventListener(Projectile.EXPLODE, explodeProjectile);
 			stage.addEventListener(ExplosionBase.REMOVE_EXPLOSION, removeExplosion);
 			
-			waveSystem = new WaveSystem(this);
-			addChild(waveSystem);
+			// Enemies
+			_waveSystem = new WaveSystem(this);
+			//addChild(_waveSystem);
 			
-			scoreText.text = ("Score: " + score);
-			addChild(scoreText);
-			scoreText.x = 20;
-			scoreText.y = 20;
-			scoreText.selectable = false;
+			// UI
+			addChild(_ui);
+			
+			// Play and loop forever
+			_gameSC = _gameBG_SFX.play(0, int.MAX_VALUE, _trans); 
+			_gameSC.addEventListener(Event.SOUND_COMPLETE, soundLoop);
 		}
 		
-		// Loops
+		
+		
+		// Update
 		private function update(e:Event):void {
-			var projectilesLength : Number = _projectiles.length,
-				explosionsLength : Number = _explosions.length,
-				enemyProjectilesLength : Number = _enemyProjectiles.length,
-				towersLength : Number = _towers.length,
-				currentProjectile : Projectile,
-				currentExplosion : ExplosionBase,
-				currentEnemyProjectile : Projectile;
+			var projectilesLength 		: Number		= _projectiles.length,
+				explosionsLength 		: Number 		= _explosions.length,
+				enemyProjectilesLength 	: Number 		= _enemyProjectiles.length,
+				towersLength 			: Number 		= _towers.length,
+				currentProjectile 		: Projectile,
+				currentExplosion 		: ExplosionBase,
+				currentEnemyProjectile	: Projectile;
 				
-			// Update score
-			scoreText.text = ("Score: " + score);	
 			
 			// Loop through the projectiles array
 			for (var i : int = projectilesLength - 1; i >= 0; i--) {
@@ -85,17 +101,20 @@ package  {
 				for (j = towersLength - 1; j >= 0; j--) {
 					if (_towers[j] != null) {
 						if (currentEnemyProjectile.hitTestObject(_towers[j])) {
-							/*
 							//_towers.splice(_towers[j]);
-							hp--;
-							if (hp <= 0) {
-								gameover();
+							/*
+							trace(_hp);
+							_hp--;
+							if (_hp <= 0) {
+								destroy();
 							}
 							*/
 						}
 					}
 				}
+				
 			}
+			
 			
 			// Loop through the explosions array
 			for (i = explosionsLength - 1; i >= 0; i--) {
@@ -109,27 +128,10 @@ package  {
 							_enemyProjectiles[j].explode();
 						}
 					}
-					
 				}
 			}
 			
 		}
-		// DOESN'T WORK YET ;-;
-		/*
-		private function gameover():void {
-			
-			// Remove all the eventlisteners
-			removeEventListener(Event.ENTER_FRAME, update);
-			stage.removeEventListener(TowerBase.SHOOT, addProjectile);
-			stage.removeEventListener(WaveSystem.SHOOT, addProjectile);
-			stage.removeEventListener(MouseEvent.CLICK, mouseClick);
-			stage.removeEventListener(Projectile.EXPLODE, explodeProjectile);
-			stage.removeEventListener(ExplosionBase.REMOVE_EXPLOSION, removeExplosion);
-			stage.removeChild(waveSystem);
-			// Tell the main to open the menu
-			//dispatchEvent(new Event("openMenu"));
-		}
-		*/
 		
 		// Random generate which tower will spawn
 		private function createTowers():void {
@@ -138,15 +140,30 @@ package  {
 			for (var i:Number = 0; i < 3; i++) {
 				switch (Math.floor(Math.random() * 2) + 1) {
 					case 1:
-						tower = towerFactory.addTower(TowerFactory.TOWER_01, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						tower = _towerFactory.addTower(TowerFactory.TOWER_01, this, stage.stageWidth / i, stage.stageHeight - 20);
 						break;
 					case 2:
-						tower = towerFactory.addTower(TowerFactory.TOWER_02, this.stage, this.stage.stageWidth / i, this.stage.stageHeight - 20);
+						tower = _towerFactory.addTower(TowerFactory.TOWER_02, this, stage.stageWidth / i, stage.stageHeight - 20);
 						break;
 				}
 				_towers.push(tower);
 			}
-			//hp = _towers.length;
+		}
+		
+		private function createVehicles():void {
+			var vehicle : VehicleBase;
+			
+			for (var i:Number = 0; i < _amountOfVehicles; i++) {
+				switch (Math.floor(Math.random() * 2) + 1) {
+					case 1:
+						vehicle = _vehicleFactory.addVehicle(VehicleFactory.CAR, this, i*50, stage.stageHeight - 13);
+						break;
+					case 2:
+						vehicle = _vehicleFactory.addVehicle(VehicleFactory.TRUCK, this, i*50, stage.stageHeight - 13);
+						break;
+				}
+				_vehicles.push(vehicle);
+			}
 		}
 		
 		// On mouse click
@@ -160,17 +177,6 @@ package  {
 			_towers[0].shoot();
 		}
 		
-		// Create explosion on projectile
-		private function explodeProjectile(e:Event):void {
-			var projectile : Projectile = e.target as Projectile,
-				explosion : ExplosionBase;
-				
-			explosion = explosionFactory.addExplosion(projectile.explosionType, this.stage, projectile.x, projectile.y);
-			_explosions.push(explosion);
-			
-			trace(projectile);
-			removeProjectile(projectile);
-		}
 		
 		// Add given projectile to projectiles array
 		private function addProjectile(e : ShootEvent):void {
@@ -181,12 +187,26 @@ package  {
 			}
 		}
 		
+		// REMOVE TOWER
+		private function destroyTower(e:Event):void {
+			var tower 			: TowerBase = e.target as TowerBase,
+				index			: int; 
+				
+			index = _towers.indexOf(tower);
+			_towers.splice(index, 1);
+			removeChild(tower);
+			
+			if (_towers.length == 0) {
+				destroy();
+			}
+		}
+		
 		// Remove given projectile from projectilss array
 		private function removeProjectile(pro:Projectile):void {
-			var projectile : Projectile = pro,
-				index : int;
+			var projectile	: Projectile = pro,
+				index 		: int;
 				
-			stage.removeChild(projectile);
+			removeChild(projectile);
 			if (projectile is EnemyMissile) {
 				index = _enemyProjectiles.indexOf(projectile);
 				_enemyProjectiles.splice(index, 1);
@@ -195,44 +215,78 @@ package  {
 				index = _projectiles.indexOf(projectile);
 				_projectiles.splice(index, 1);		
 			}
+			// Update score UI
+			UI.updateScore(score);
+		}
+		
+		// Create explosion on projectile
+		private function explodeProjectile(e:Event):void {
+			var projectile	: Projectile = e.target as Projectile,
+				explosion	: ExplosionBase;
+				
+			explosion = _explosionFactory.addExplosion(projectile.explosionType, this, projectile.x, projectile.y);
+			_explosions.push(explosion);
+			
+			removeProjectile(projectile);
 		}
 		
 		// Remove given explosion from explosions array
 		private function removeExplosion(e:Event):void {
-			var explosion : ExplosionBase = e.target as ExplosionBase,
-				index : int = _explosions.indexOf(explosion);
-			
-			stage.removeChild(explosion);
+			var explosion	: ExplosionBase		= e.target as ExplosionBase,
+				index		: int				= _explosions.indexOf(explosion);
+				
+			removeChild(explosion);
 			_explosions.splice(index, 1);
 		}
 		
+		// Loop the bg music
+		private function soundLoop(e:Event):void { 
+			_gameSC = _gameBG_SFX.play(0, int.MAX_VALUE, _trans);
+		}
+		
 		// GETTER & SETTER
-		public function get towers():Array 
-		{
+		public function get towers():Array {
 			return _towers;
 		}
 		
-		public function set towers(value:Array):void 
-		{
+		public function set towers(value:Array):void {
 			_towers = value;
 		}
 		
-		/*
-		private function update(e:Event):void {
-			var rocketsLength	:	int = _rockets.length,
-				currentRocket	:	Projectile;
-				
-			for (var i : int = rocketsLength - 1; i >= 0; i--) {
-				currentRocket = _rockets[i];
-				currentRocket.update();
-				
-				if (isOutOfBounds(currentRocket)) {
-					_rockets.splice(i, 1);
+		// Clean everything
+		private function destroy():void {
+			var l : uint = numChildren,
+				current : DisplayObject;
+			
+			// Manually removing
+			trace("gihfgubgfjdihjgbf");
+			_waveSystem.destroy();
+			removeEventListener(Event.ENTER_FRAME, update);
+			stage.removeEventListener(TowerBase.SHOOT, addProjectile);
+			stage.removeEventListener(WaveSystem.SHOOT, addProjectile);
+			stage.removeEventListener(MouseEvent.CLICK, mouseClick);
+			stage.removeEventListener(Projectile.EXPLODE, explodeProjectile);
+			stage.removeEventListener(ExplosionBase.REMOVE_EXPLOSION, removeExplosion);
+			_gameSC.removeEventListener(Event.SOUND_COMPLETE, soundLoop);
+			_gameSC.stop();
+			
+			// Automatically removing
+			for ( var i : int = l -1; i >= 0; i--) {
+				current = getChildAt(i);
+				if (current is DisplayObject) {
+					if (current is DisplayObject) {
+						removeChild(current);
+					}
 				}
+				current = null;
+				i = l = NaN;
+				
+				// Start Game
+				dispatchEvent(new Event(Main.OPENMENU, false));
 			}
 		}
-		*/
+		
+		
 		
 	}
-
 }

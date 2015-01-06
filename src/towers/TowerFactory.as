@@ -1,5 +1,5 @@
 package towers {
-	import flash.display.Stage;
+	import flash.display.DisplayObjectContainer;
 	/**
 	 * ...
 	 * @author Boy Voesten
@@ -9,7 +9,7 @@ package towers {
 		public static const TOWER_01:uint = 0;
 		public static const TOWER_02:uint = 1;
 		
-		public function addTower(towerType:uint, target:Stage, xLoc:int, yLoc:int):TowerBase {
+		public function addTower(towerType:uint, target:DisplayObjectContainer, xLoc:int, yLoc:int):TowerBase {
 			var tower:TowerBase = this.createTower(towerType);
 			
 			tower.drawTower();

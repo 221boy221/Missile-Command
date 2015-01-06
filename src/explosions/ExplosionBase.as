@@ -10,8 +10,9 @@ package explosions {
 	
 	public class ExplosionBase extends Sprite {
 		
-		static public const REMOVE_EXPLOSION:String = "REMOVE_EXPLOSION";
-		public var asset : MovieClip;
+		public static const REMOVE_EXPLOSION	: String 		= "REMOVE_EXPLOSION";
+		public var asset						: MovieClip;
+		private var _explosion_SFX				: Explosion_SFX	= new Explosion_SFX;
 		
 		internal function setLoc(xLoc:int, yLoc:int):void {
 			x = xLoc;
@@ -24,6 +25,7 @@ package explosions {
 		
 		internal function initExplosion():void {
 			addChild(asset);
+			_explosion_SFX.play();
 		}
 		
 		public function update():void {

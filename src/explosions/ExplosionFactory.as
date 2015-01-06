@@ -1,5 +1,5 @@
 package explosions {
-	import flash.display.Stage;
+	import flash.display.DisplayObjectContainer;
 	
 	/**
 	 * ...
@@ -10,7 +10,7 @@ package explosions {
 		public static const EXPLOSION_SMALL	: uint = 0;
 		public static const EXPLOSION_BIG : uint = 1;
 		
-		public function addExplosion(explosionType:uint, target:Stage, xLoc:int, yLoc:int):ExplosionBase {
+		public function addExplosion(explosionType:uint, target:DisplayObjectContainer, xLoc:int, yLoc:int):ExplosionBase {
 			var explosion:ExplosionBase = this.createExplosion(explosionType);
 			
 			explosion.drawExplosion();

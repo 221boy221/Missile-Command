@@ -1,5 +1,6 @@
 package  {
 	import events.ShootEvent;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -17,35 +18,21 @@ package  {
 	 * ...
 	 * @author Boy Voesten
 	 */
-	public class WaveSystem extends Sprite {
+	public class WaveSystem {
 		
-		public static const SHOOT : String = "SHOOT";
-		private var weapon : Weapon = new EnemyWeapon();
-		private var _game : Game;		
+		public static const SHOOT		: String	= "SHOOT";
+		private var _weapon				: Weapon	= new EnemyWeapon();
+		private var _game				: Game;		
+		private var _ui					: UI		= new UI();
 		// Wave system
-		private var _wave				:	int	= 1;
-		private var _timeBetweenWaves	:	Timer;
-		private var _enemySpawntime		:	Timer;
-		private var _spawnsPerWave		:	int;
-		private var _spawnSpeed			:	Number	= 2050;
-		private var _txtWave : TextField = new TextField();
+		private var _wave				: int		= 1;
+		private var _timeBetweenWaves	: Timer;
+		private var _enemySpawntime		: Timer;
+		private var _spawnsPerWave		: int;
+		private var _spawnSpeed			: Number	= 2050;
 		
 		public function WaveSystem(game:Game) {
-			addEventListener(Event.ADDED_TO_STAGE, init);
 			_game = game;
-		}
-		
-		private function init(e:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// Entry
-			
-			// Text will be added here so that if you decide to remove the wave system
-			// you won't have to bother getting rid of the left-overs in the game / other class(es).
-			_txtWave.text = ("Wave: " + _wave);
-			_txtWave.x = 20;
-			_txtWave.y = 40;
-			_txtWave.selectable = false;
-			addChild(_txtWave);
 			
 			_timeBetweenWaves = new Timer(4000, 2);
 			_timeBetweenWaves.addEventListener(TimerEvent.TIMER, nextWave);	
@@ -56,7 +43,7 @@ package  {
 			if (_timeBetweenWaves.currentCount > 1) {
 				
 				if (_spawnSpeed >= 500) {
-					_spawnSpeed -= 50;
+					_spawnSpeed -= 150;
 				}
 				_spawnsPerWave = 10 * _wave;
 				_enemySpawntime = new Timer(_spawnSpeed, _spawnsPerWave);
@@ -64,11 +51,12 @@ package  {
 				_enemySpawntime.start();
 				_timeBetweenWaves.reset();
 				
+				// Update wave UI
+				//_ui.updateWave(_wave);
+				UI.updateWave(_wave);
+				
 				trace("WAVE: " + _wave);
 				trace("Spawntime is: " + _spawnSpeed);
-				
-				// Update UI
-				_txtWave.text = ("Wave: " + _wave);
 			}
 		}
 		
@@ -82,15 +70,16 @@ package  {
 		}
 		
 		private function spawnEnemyMissile():void {
-			var enemyProjectile : Projectile,
-				allTowers : Array = [],
-				selectedTower : TowerBase,
-				target : Point,
-				spawnPosX : Number,
-				spawnPosY : Number,
-				_rotationInRadians : Number,
-				_diffX : Number,
-				_diffY : Number;
+			var enemyProjectile 	: Projectile,
+				allTowers 			: Array = [],
+				selectedTower 		: TowerBase,
+				target 				: Point,
+				spawnPosX 			: Number,
+				spawnPosY 			: Number,
+				rotationInRadians 	: Number,
+				rot					: Number,
+				diffX 				: Number,
+				diffY 				: Number;
 			
 			// Grab one out of all the towers in the tower array from the game
 			allTowers = _game.towers;
@@ -98,16 +87,22 @@ package  {
 			target = new Point(selectedTower.x, selectedTower.y);
 
 			// Randomly spawn on X
-			spawnPosX = stage.stageWidth * Math.random();
+			spawnPosX = _game.stage.stageWidth * Math.random();
 			spawnPosY = 10;
 			
-			_diffX = target.x - spawnPosX;
-			_diffY = target.y - spawnPosY;
-			_rotationInRadians = Math.atan2(_diffY, _diffX);
-			rotation = _rotationInRadians * (180 / Math.PI);
+			diffX = target.x - spawnPosX;
+			diffY = target.y - spawnPosY;
+			rotationInRadians = Math.atan2(diffY, diffX);
+			rot = rotationInRadians * (180 / Math.PI);
 			
-			enemyProjectile = weapon.fire(EnemyWeapon.ENEMYMISSILE, this.stage, spawnPosX, spawnPosY, rotation, target);
-			dispatchEvent(new ShootEvent(SHOOT, enemyProjectile, true));
+			enemyProjectile = _weapon.fire(EnemyWeapon.ENEMYMISSILE, _game, spawnPosX, spawnPosY, rot, target, selectedTower);
+			
+			_game.dispatchEvent(new ShootEvent(SHOOT, enemyProjectile, true));
+		}
+		
+		public function destroy():void {
+			_timeBetweenWaves.removeEventListener(TimerEvent.TIMER, nextWave);	
+			_enemySpawntime.removeEventListener(TimerEvent.TIMER, nextSpawn);
 		}
 		
 	}

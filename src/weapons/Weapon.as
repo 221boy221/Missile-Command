@@ -1,7 +1,8 @@
 package weapons {
-	import flash.display.Stage;
+	import flash.display.DisplayObjectContainer;
 	import flash.errors.IllegalOperationError;
 	import flash.geom.Point;
+	import towers.TowerBase;
 	/**
 	 * ...
 	 * @author Boy Voesten
@@ -10,12 +11,13 @@ package weapons {
 	// Skeleton for weapons
 	public class Weapon {
 		
-		public function fire(projectileType:uint, targetStage:Stage, x:int, y:int, angle:Number, target:Point):Projectile {
+		public function fire(projectileType:uint, targetStage:DisplayObjectContainer, x:int, y:int, angle:Number, target:Point, selectedTower:TowerBase = null):Projectile {
 			var projectile : Projectile = createProjectile(projectileType);
 			
 			projectile.drawProjectile();
 			projectile.setLoc(x, y);
 			projectile.setDir(angle, target);
+			projectile.tower(selectedTower);
 			projectile.arm();
 			targetStage.addChild(projectile);
 			projectile.release();
