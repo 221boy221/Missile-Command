@@ -11,8 +11,6 @@ package archive {
 		
 		private var _projectileName	:	String;
 		private var _projectileArt	:	Sprite;
-		private var _directionX		:	Number;
-		private var _directionY		:	Number;
 		private var _speed			:	Number;
 		
 		public function get projectileName():String {

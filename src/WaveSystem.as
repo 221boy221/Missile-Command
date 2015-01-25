@@ -22,8 +22,7 @@ package  {
 		
 		public static const SHOOT		: String	= "SHOOT";
 		private var _weapon				: Weapon	= new EnemyWeapon();
-		private var _game				: Game;		
-		private var _ui					: UI		= new UI();
+		private var _game				: Game;
 		// Wave system
 		private var _wave				: int		= 1;
 		private var _timeBetweenWaves	: Timer;
@@ -52,7 +51,6 @@ package  {
 				_timeBetweenWaves.reset();
 				
 				// Update wave UI
-				//_ui.updateWave(_wave);
 				UI.updateWave(_wave);
 				
 				trace("WAVE: " + _wave);

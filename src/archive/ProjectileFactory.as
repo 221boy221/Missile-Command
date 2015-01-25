@@ -1,4 +1,4 @@
-package C:\Users\Boy\Documents\school\flash\Missile-Command\archive {
+package archive:\Users\Boy\Documents\school\flash\Missile-Command\archive {
 	import weapons.Rocket;
 	import weapons.Projectile;
 	import weapons.Missile;

@@ -33,7 +33,6 @@ package  {
 		private var _explosionFactory 	: ExplosionFactory	= new ExplosionFactory();
 		private var _vehicleFactory		: VehicleFactory	= new VehicleFactory();
 		private var _ui					: UI				= new UI();
-		private var _shooter 			: int;
 		private var _waveSystem 		: WaveSystem;
 		private var _gameSC 			: SoundChannel;
 		private var _gameBG_SFX 		: GameBG_SFX 		= new GameBG_SFX();
@@ -80,7 +79,6 @@ package  {
 			var projectilesLength 		: Number		= _projectiles.length,
 				explosionsLength 		: Number 		= _explosions.length,
 				enemyProjectilesLength 	: Number 		= _enemyProjectiles.length,
-				towersLength 			: Number 		= _towers.length,
 				currentProjectile 		: Projectile,
 				currentExplosion 		: ExplosionBase,
 				currentEnemyProjectile	: Projectile;
@@ -96,23 +94,6 @@ package  {
 			for (i = enemyProjectilesLength - 1; i >= 0; i--) {
 				currentEnemyProjectile = _enemyProjectiles[i];
 				currentEnemyProjectile.update();
-				
-				// HitTest the EnemyProjectiles with the Towers
-				for (j = towersLength - 1; j >= 0; j--) {
-					if (_towers[j] != null) {
-						if (currentEnemyProjectile.hitTestObject(_towers[j])) {
-							//_towers.splice(_towers[j]);
-							/*
-							trace(_hp);
-							_hp--;
-							if (_hp <= 0) {
-								destroy();
-							}
-							*/
-						}
-					}
-				}
-				
 			}
 			
 			
@@ -259,7 +240,6 @@ package  {
 				current : DisplayObject;
 			
 			// Manually removing
-			trace("gihfgubgfjdihjgbf");
 			_waveSystem.destroy();
 			removeEventListener(Event.ENTER_FRAME, update);
 			stage.removeEventListener(TowerBase.SHOOT, addProjectile);

@@ -10,10 +10,10 @@ package {
 	public class UI extends Sprite {
 		
 		// Static because I only want one of them.
-		public static var _scoreText	: TextField	= new TextField();
-		public static var _waveText		: TextField	= new TextField();
+		public static const _scoreText	: TextField	= new TextField();
+		public static const _waveText	: TextField	= new TextField();
 		
-		public function UI():void {
+		public function UI() {
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}

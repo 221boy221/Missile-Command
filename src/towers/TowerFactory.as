@@ -6,8 +6,8 @@ package towers {
 	 */
 	public class TowerFactory {
 		
-		public static const TOWER_01:uint = 0;
-		public static const TOWER_02:uint = 1;
+		public static const TOWER_01	:	uint = 0;
+		public static const TOWER_02	:	uint = 1;
 		
 		public function addTower(towerType:uint, target:DisplayObjectContainer, xLoc:int, yLoc:int):TowerBase {
 			var tower:TowerBase = this.createTower(towerType);
