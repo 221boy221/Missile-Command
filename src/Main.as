@@ -11,35 +11,6 @@ package {
 	 */
 	public class Main extends Sprite {
 		
-		/*
-		private var _txtHighscore : TextField 	= new TextField();
-		public static var highscore	: Number = 0;
-		
-		private function init(e:Event = null):void {
-			
-			_txtHighscore.text = "Highscore: " + String(highscore);
-			_txtHighscore.x = stage.stageWidth / 2 - _txtHighscore.width / 2 - 60;
-			_txtHighscore.y = stage.stageHeight / 2 - 125;
-			
-			_txtHighscore.autoSize = TextFieldAutoSize.LEFT;
-			_txtHighscore.selectable = false;
-			
-			addChild(_txtHighscore);
-		}
-		
-		private function startGame(e:Event):void {
-			removeChild(_txtHighscore);
-		}
-		
-		private function openMenu(e:Event):void {
-			if (_game.score > highscore) {
-				highscore = _game.score;
-				_txtHighscore.text = "Highscore: " + String(highscore);
-			}
-			addChild(_txtHighscore);
-		}
-		*/
-		
 		public static const STARTGAME	: String	= "startGame";
 		public static const OPENMENU	: String	= "openMenu";
 		private var _menu				: Menu;
@@ -61,8 +32,8 @@ package {
 			addEventListener(Event.ENTER_FRAME, loading);
 		}
 		
+		// Pre-Loader    (Game loads too fast in order to see)
 		private function loading(e:Event):void {
-			// Pre-Loader
 			var total	:	Number	= stage.loaderInfo.bytesTotal,
 				loaded	:	Number	= stage.loaderInfo.bytesLoaded;
 				
@@ -119,6 +90,35 @@ package {
 			_game.addEventListener(OPENMENU, openMenu);
 			stage.focus	= stage;
 		}
+		
+		/*
+		private var _txtHighscore : TextField 	= new TextField();
+		public static var highscore	: Number = 0;
+		
+		private function init(e:Event = null):void {
+			
+			_txtHighscore.text = "Highscore: " + String(highscore);
+			_txtHighscore.x = stage.stageWidth / 2 - _txtHighscore.width / 2 - 60;
+			_txtHighscore.y = stage.stageHeight / 2 - 125;
+			
+			_txtHighscore.autoSize = TextFieldAutoSize.LEFT;
+			_txtHighscore.selectable = false;
+			
+			addChild(_txtHighscore);
+		}
+		
+		private function startGame(e:Event):void {
+			removeChild(_txtHighscore);
+		}
+		
+		private function openMenu(e:Event):void {
+			if (_game.score > highscore) {
+				highscore = _game.score;
+				_txtHighscore.text = "Highscore: " + String(highscore);
+			}
+			addChild(_txtHighscore);
+		}
+		*/
 		
 	}
 	
